@@ -66,10 +66,10 @@ BinarySearchTree::~BinarySearchTree() {
     deleteNodesRecursive(root);
 }
 
-void BinarySearchTree::insert(int number) {
+bool BinarySearchTree::insert(int number) {
     if (root == NULL) {
         root = new BinarySearchTreeNode(number);
-        return;
+        return true;
     }
 
     // Add a new value to the tree
@@ -79,6 +79,7 @@ void BinarySearchTree::insert(int number) {
             if (currentNode->getLeftChild() == NULL) {
                 BinarySearchTreeNode* newNode = new BinarySearchTreeNode(number);
                 currentNode->setLeftChild(newNode);
+                return true;
             } else {
                 currentNode = currentNode->getLeftChild();
             }
@@ -86,23 +87,24 @@ void BinarySearchTree::insert(int number) {
             if (currentNode->getRightChild() == NULL) {
                 BinarySearchTreeNode* newNode = new BinarySearchTreeNode(number);
                 currentNode->setRightChild(newNode);
+                return true;
             } else {
                 currentNode = currentNode->getRightChild();
             }
         } else {
             std::cerr << "ERROR: can't insert " << number << " -- element already exists in BST" << std::endl;
-            return;
+            return false;
         }
     }
     
 }
 
-void BinarySearchTree::remove(int number) {
+bool BinarySearchTree::remove(int number) {
 
     // Tree is empty
     if (root == NULL) {
         std::cerr << "ERROR: can't remove " << number << " -- element doesn't exist in BST" << std::endl;
-        return;
+        return false;
     }
 
     // Tree is not empty; traverse
@@ -115,7 +117,7 @@ void BinarySearchTree::remove(int number) {
         // Node not found; no more to search
         if (currentNode == NULL) {
             std::cerr << "ERROR: can't remove " << number << " -- element doesn't exist in BST" << std::endl;
-            return;
+            return false;
         }
 
         // Node found
@@ -137,7 +139,7 @@ void BinarySearchTree::remove(int number) {
                     delete currentNode;
                     currentNode = right;
                     right->setLeftChild(left);
-                    return;
+                    return true;
                 }
                 // Traverse
                 previousNode = currentNode;
@@ -148,13 +150,14 @@ void BinarySearchTree::remove(int number) {
                         delete nodeToDelete;
                         nodeToDelete = currentNode;
                         nodeToDelete->setRightChild(right);
+                        return true;
                     } else {
                         previousNode = currentNode;
                         currentNode = currentNode->getLeftChild();
                     }
                 }
             }
-            return;
+            return true;
             
         }
         // Node not found; continue search

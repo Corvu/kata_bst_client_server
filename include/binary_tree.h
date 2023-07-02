@@ -52,11 +52,13 @@ public:
     ~BinarySearchTree();
     
     // Insert a new value to the tree
-    void insert(int number);
+    // Returns true if insertion succeeded and false is element already exists in BST
+    bool insert(int number);
 
     // Delete a value from the tree
-    void remove(int number);
+    // Returns true if removal succeeded and false is element doesn't exist in BST
+    bool remove(int number);
 
-    // Find a value in the tree
+    // Check whether given value is in the tree
     bool find(int number);
 };

@@ -80,21 +80,33 @@ int main() {
         int value;
         tokens >> command >> value;
         std::string response;
+        bool action_flag;
         
         // Choose appropriate action
         if (command == "insert") {
-            tree->insert(value);
+            action_flag = tree->insert(value);
+            if (action_flag == true) {
+                message = "Inserted " + std::to_string(value);
+            } else {
+                message = "Failed to insert " + std::to_string(value) + " -- element already exists in BST";
+            }
         } else if (command == "remove") { 
-            tree->remove(value);
+            action_flag = tree->remove(value);
+            if (action_flag == true) {
+                message = "Removed " + std::to_string(value);
+            } else {
+                message = "Failed to remove " + std::to_string(value) + " -- element doesn't exist in BST";
+            }
         } else if (command == "find") {
-            bool result = tree->find(value);
-            if (result) {
+            action_flag = tree->find(value);
+            if (action_flag == true) {
                 message = "found";
             } else {
                 message = "not found";
             }
         } else {
             std::cout << "Unknown command form client: " << command << std::endl;
+            message = "Unknown command recieved";
         }
 
         std::cout << "Client message: " << buffer << std::endl;
