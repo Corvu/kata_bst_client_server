@@ -1,13 +1,16 @@
+CC := g++
+CFLAGS := -Iinclude/ -std=c++2a
+
 all: server client
 
 server: bst
-	g++ -Iinclude/ src/server.cpp binary_tree.o -o server
+	$(CC) $(CFLAGS) src/server.cpp binary_tree.o -o server
 
 client:
-	g++ src/client.cpp -o client
+	$(CC) $(CFLAGS) src/client.cpp -o client
 
 bst:
-	g++ -Iinclude/ -c src/binary_tree.cpp
+	$(CC) $(CFLAGS) -c src/binary_tree.cpp
 
 clean:
 	rm client server binary_tree.o

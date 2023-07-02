@@ -27,14 +27,28 @@ int main() {
         return 1;
     }
 
-    // Send messages to server
+    // Send and recieve messages to/from the server
     std::string message;
+    char buffer[1024] = {0};
     while (true) {
+        // Send message
         std::getline(std::cin, message);
         int send_len = send(client_socket, message.c_str(), message.length(), 0);
         if (send_len == -1) {
             std::cerr << "Failed to send message to server." << std::endl;
         }
+
+        // Get response
+        int recv_len = recv(client_socket, buffer, 1024, 0);
+        if (recv_len == -1) {
+            std::cerr << "Failed to recieve message from the server." << std::endl;
+        }
+
+        // Display message from the server on the cient side
+        std::cout << buffer << std::endl;
+
+        // Clear buffer
+        memset(buffer, 0, sizeof(buffer));
     }
 
     // Close the socket

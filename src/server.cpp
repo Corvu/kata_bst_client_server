@@ -3,8 +3,15 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <cstring>
+#include <sstream>
+
+#include "binary_tree.h"
 
 int main() {
+
+    // Create a binary search tree
+    BinarySearchTree* tree = new BinarySearchTree();
+
     int error_code = 0;
     // socket, bind, listen, accept, recv, close
 
@@ -55,7 +62,7 @@ int main() {
         return 1;
     }*/
 
-    // Recieve data from the client
+    // Recieve data from the client repeatedly
     char buffer[1024] = {0};
     while (true) {
         int recv_len = recv(client_socket, buffer, 1024, 0);
@@ -65,7 +72,42 @@ int main() {
             close(server_socket);
             return 1;
         }
+        
+        // Parse client's message
+        std::string message = std::string(buffer);
+        std::stringstream tokens(message);
+        std::string command;
+        int value;
+        tokens >> command >> value;
+        std::string response;
+        
+        // Choose appropriate action
+        if (command == "insert") {
+            tree->insert(value);
+        } else if (command == "remove") { 
+            tree->remove(value);
+        } else if (command == "find") {
+            bool result = tree->find(value);
+            if (result) {
+                message = "found";
+            } else {
+                message = "not found";
+            }
+        } else {
+            std::cout << "Unknown command form client: " << command << std::endl;
+        }
+
         std::cout << "Client message: " << buffer << std::endl;
+
+        // Send response to the client
+        int send_len = send(client_socket, message.c_str(), message.length(), 0);
+        if (send_len == -1) {
+            std::cerr << "Failed to send message to client." << std::endl;
+            close(client_socket);
+            close(server_socket);
+            return 1;
+        }
+
     }
 
     
@@ -74,6 +116,9 @@ int main() {
     close(server_socket);
 
     std::cout << "Success." << std::endl;
+
+    // Delete binary search tree
+    delete tree;
 
     return 0;
 }
