@@ -1,0 +1,1 @@
+add_library(kata_bst_client_server INTERFACE)
